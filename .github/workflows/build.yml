@@ -107,6 +107,7 @@ jobs:
             mv "$APK_DIR/app-release-unsigned.apk" "$APK_DIR/$NAME"
           fi
           echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "APK renamed to $NAME"
 
       - name: Upload APK
@@ -125,9 +126,12 @@ jobs:
           APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)"
           "$APKSIGNER" verify --print-certs "app/build/outputs/apk/release/$APK_NAME"
 
-      - name: Publish signed GitHub Release (on v* tags)
-        if: startsWith(github.ref, 'refs/tags/v') && env.HAS_SIGNING == 'true'
+      - name: Publish signed APK to stable GitHub Release
+        if: env.HAS_SIGNING == 'true'
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: v${{ steps.apk.outputs.version }}
+          name: Ampy v${{ steps.apk.outputs.version }}
           files: app/build/outputs/apk/release/${{ steps.apk.outputs.name }}
           generate_release_notes: true
+          prerelease: false
