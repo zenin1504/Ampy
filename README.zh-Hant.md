@@ -33,7 +33,7 @@
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.dijia1124.plusplusbattery/)
+    height="80">](https://github.com/zenin1504/Ampy/releases)
 
 或從 [Github Release](https://github.com/zenin1504/Ampy/releases) 下載 APK
 
@@ -49,8 +49,8 @@
 特別感謝 [@shminer](https://github.com/shminer) 提供核心原始碼、演算法邏輯以及有關 FCC 和 SOH 補償的見解。
 
 ## 貢獻者
-<a href="https://github.com/dijia1124/plusplusbattery/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=dijia1124/plusplusbattery" />
+<a href="https://github.com/zenin1504/Ampy/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=zenin1504/Ampy" />
 </a>
 
 ## 授權條款

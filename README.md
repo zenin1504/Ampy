@@ -1,4 +1,4 @@
-# PlusPlusBattery - Battery Info Viewer for OPlus Devices
+# Ampy - Battery Info Viewer
 
 > **Note:** This repository is **Ampy**, a fork of [PlusPlusBattery](https://github.com/dijia1124/PlusPlusBattery). Ampy is optimized for Xiaomi / Redmi / POCO devices, but it also works on other Android devices through OPlus, Moto, and generic logcat/fallback parsers. Its optional native core is written in Rust (`versionName` ends in `-R`). The documentation below is preserved from the original upstream project.
 
@@ -49,11 +49,8 @@ Ampy is Xiaomi / Redmi / POCO-first, but it is not limited to those devices:
 
 ## Downloads
 
-[<img src="https://f-droid.org/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.dijia1124.plusplusbattery/)
-
-Or download the APK from [Github Release](https://github.com/dijia1124/PlusPlusBattery/releases)
+Download the signed APK from [GitHub Releases](https://github.com/zenin1504/Ampy/releases).
+F-Droid submission is pending.
 
 ## Installation
 
@@ -61,7 +58,7 @@ Or download the APK from [Github Release](https://github.com/dijia1124/PlusPlusB
 2. Go to the Release page to download and install the APK.
 3. Launch the app.
 4. (Optional) Grant root access.
-5. (Optional) For battery monitor notification: battery optimization in system settings for PlusPlusBattery needs to be off. Additionally, for ColorOS users, enabling "Auto-launch" permission in system settings for PlusPlusBattery is also needed to make the monitor service resume/pause depending on screen-on/off properly.
+5. (Optional) For battery monitor notification: battery optimization in system settings for Ampy needs to be off. Additionally, for ColorOS users, enabling "Auto-launch" permission in system settings for Ampy is also needed to make the monitor service resume/pause depending on screen-on/off properly.
 6. (Optional) For non-Oppo/OnePlus/Realme devices, you may want to disable the option 'Show OPlus exclusive entries' to hide those useless data under root mode, and edit the custom entries to suit your needs.
 
 ## Credits
@@ -69,8 +66,8 @@ Or download the APK from [Github Release](https://github.com/dijia1124/PlusPlusB
 Special thanks to [@shminer](https://github.com/shminer) for providing kernel source code, algorithm logic, and insights related to FCC & SOH compensation.
 
 ## Contributors
-<a href="https://github.com/dijia1124/plusplusbattery/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=dijia1124/plusplusbattery" />
+<a href="https://github.com/zenin1504/Ampy/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=zenin1504/Ampy" />
 </a>
 
 ## License

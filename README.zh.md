@@ -33,7 +33,7 @@
 
 [<img src="https://f-droid.org/badge/get-it-on-zh-hans.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.dijia1124.plusplusbattery/)
+    height="80">](https://github.com/zenin1504/Ampy/releases)
 
 或从[Github Release](https://github.com/zenin1504/Ampy/releases)页下载APK
 
@@ -49,8 +49,8 @@
 感谢 [@shminer](https://github.com/shminer) 提供对fcc&soh偏移量相关的内核源码、算法和思路。
 
 ## 贡献者
-<a href="https://github.com/dijia1124/plusplusbattery/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=dijia1124/plusplusbattery" />
+<a href="https://github.com/zenin1504/Ampy/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=zenin1504/Ampy" />
 </a>
 
 ## 开源许可

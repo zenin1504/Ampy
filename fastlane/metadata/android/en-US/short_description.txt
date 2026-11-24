@@ -1,1 +1,1 @@
-Real-time battery stats & health estimator for OnePlus/Oppo/Realme phones
+Battery stats & health estimator for Xiaomi, Redmi and POCO

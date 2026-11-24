@@ -9,6 +9,11 @@ This workspace contains the Rust replacement for Ampy's previous C++ JNI librari
 All three export the exact JNI symbols expected by the Kotlin facades in
 `app/src/main/java/com/zenin/ampy/nativelib/`.
 
+## Pinned toolchain
+
+`rust-toolchain.toml` pins Rust 1.100.0 and the `aarch64-linux-android` target.
+The Gradle build expects `cargo-ndk` 4.1.2.
+
 ## Local checks
 
 ```bash
