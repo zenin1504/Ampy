@@ -3,8 +3,8 @@ name: Build Ampy
 on:
   # Manual-only workflow: no push, tag-push, or pull_request triggers.
   # Automatic builds are disabled in this repository.
-  # Run the workflow manually from the Actions tab. To publish a signed
-  # GitHub Release, dispatch it on a v* tag ref.
+  # Run the workflow manually from the Actions tab; a successful signed
+  # build publishes the APK to the versioned stable GitHub Release.
   workflow_dispatch:
 
 permissions:
