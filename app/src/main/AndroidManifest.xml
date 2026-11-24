@@ -2,9 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-permission
         android:name="android.permission.ACCESS_NETWORK_STATE"
@@ -19,13 +23,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PlusPlusBattery"
+        android:theme="@style/Theme.Ampy"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ZeninMainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.PlusPlusBattery">
+            android:theme="@style/Theme.Ampy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,12 +39,31 @@
         <service
             android:name=".service.BatteryMonitorService"
             android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="user_requested_continuous_battery_notification" />
+        </service>
 
         <service
             android:name=".service.FloatingWindowService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:exported="false" />
+
+        <!-- Manifest-registered so it survives process death and reboots. -->
+        <receiver
+            android:name=".service.MonitorRestartReceiver"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.POWER_CONNECTED" />
+                <action android:name="android.intent.action.POWER_DISCONNECTED" />
+                <action android:name="com.zenin.ampy.RESTART_MONITOR" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

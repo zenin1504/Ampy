@@ -24,9 +24,14 @@ misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
-# Keystore files
+# Keystore files and signing secrets — never commit these
 *.jks
 *.keystore
+*.p12
+*.pfx
+*.b64
+keystore.properties
+secrets.env
 # kotlin
 .kotlin/
 # Google Services (e.g. APIs or Firebase)

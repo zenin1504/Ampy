@@ -1,10 +1,20 @@
 # PlusPlusBattery - Battery Info Viewer for OPlus Devices
 
+> **Note:** This repository is **Ampy**, a fork of [PlusPlusBattery](https://github.com/dijia1124/PlusPlusBattery). Ampy is optimized for Xiaomi / Redmi / POCO devices, but it also works on other Android devices through OPlus, Moto, and generic logcat/fallback parsers. The documentation below is preserved from the original upstream project.
+
 [简体中文](./README.zh.md) | [繁體中文](./README.zh-Hant.md) | English
 
 ## Introduction
 
 `PlusPlusBattery` is a lightweight battery info and health estimation tool specifically tailored for OnePlus/Oppo/Realme devices (with universal device support). It provides real-time monitoring of battery status and can evaluate the Full Charge Capacity (FCC) and the uncompensated raw FCC and State of Health (SOH) of silicon-carbon anode batteries under specific conditions.
+
+## Device support
+
+Ampy is Xiaomi / Redmi / POCO-first, but it is not limited to those devices:
+
+- **Xiaomi / Redmi / POCO**: dedicated logcat parser and monitor-notification recovery hardening.
+- **OnePlus / OPPO / realme**: the original PlusPlusBattery OPlus parsing is retained.
+- **Other Android devices**: generic fallback logcat parsing and customizable root-mode entries; available fields depend on the device and ROM.
 
 ## Features
 

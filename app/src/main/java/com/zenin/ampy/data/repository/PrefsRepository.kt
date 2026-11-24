@@ -1,0 +1,177 @@
+package com.zenin.ampy.data.repository
+
+import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.zenin.ampy.data.model.BatteryInfoType
+import com.zenin.ampy.data.util.DAILY_HISTORY_ENABLED
+import com.zenin.ampy.data.util.DARK_MODE_KEY
+import com.zenin.ampy.data.util.FLOATING_WINDOW_ALPHA
+import com.zenin.ampy.data.util.FLOATING_WINDOW_BACKGROUND_COLOR
+import com.zenin.ampy.data.util.FLOATING_WINDOW_FONT_WEIGHT
+import com.zenin.ampy.data.util.FLOATING_WINDOW_SIZE
+import com.zenin.ampy.data.util.FLOATING_WINDOW_TEXT_COLOR
+import com.zenin.ampy.data.util.FLOATING_WINDOW_TEXT_SHADOW
+import com.zenin.ampy.data.util.FLOATING_WINDOW_TEXT_STROKE_ENABLED
+import com.zenin.ampy.data.util.FLOATING_WINDOW_TOUCHABLE
+import com.zenin.ampy.data.util.FOLLOW_SYSTEM_THEME_KEY
+import com.zenin.ampy.data.util.MONITOR_ENABLED
+import com.zenin.ampy.data.util.MONITOR_VISIBLE_ENTRIES
+import com.zenin.ampy.data.util.POWER_CHART_EXPANDED_KEY
+import com.zenin.ampy.data.util.REFRESH_INTERVAL_KEY
+import com.zenin.ampy.data.util.IS_CELSIUS
+import com.zenin.ampy.data.util.dataStore
+import com.zenin.ampy.service.DailyHistoryWorker
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
+class PrefsRepository @Inject constructor (
+    @ApplicationContext context: Context
+) {
+
+    private val dataStore = context.dataStore
+
+    private val defaultVisibleEntries = emptySet<BatteryInfoType>()
+
+    val refreshInterval: Flow<Int> =
+        dataStore.data.map { it[REFRESH_INTERVAL_KEY] ?: 1000 }
+
+    suspend fun setRefreshInterval(rate: Int) {
+        dataStore.edit { it[REFRESH_INTERVAL_KEY] = rate }
+    }
+
+    // Persisted so the monitor can be restored after the process is killed,
+    // the app is swiped away from Recents, or the device reboots.
+    val monitorEnabled: Flow<Boolean> =
+        dataStore.data.map { it[MONITOR_ENABLED] ?: false }
+
+    suspend fun setMonitorEnabled(enabled: Boolean) {
+        dataStore.edit { it[MONITOR_ENABLED] = enabled }
+    }
+
+    private val keyToType = BatteryInfoType.entries.associateBy { it.key }
+
+    val visibleEntriesFlow: Flow<Set<BatteryInfoType>> = dataStore.data
+        .map { prefs ->
+            (prefs[MONITOR_VISIBLE_ENTRIES]
+                ?.takeIf(String::isNotBlank)
+                ?.split(',')
+                ?.mapNotNull { raw -> keyToType[ raw.trim() ] }
+                ?.toSet()
+                ?: defaultVisibleEntries)
+        }
+
+    suspend fun setVisibleEntries(keys: Set<BatteryInfoType>) {
+        dataStore.edit { prefs ->
+            prefs[MONITOR_VISIBLE_ENTRIES] = keys.joinToString(",") { it.key }
+        }
+    }
+
+    val darkModeEnabled: Flow<Boolean> =
+        dataStore.data.map { it[DARK_MODE_KEY] == true }
+
+    val followSystemTheme: Flow<Boolean> =
+        dataStore.data.map { it[FOLLOW_SYSTEM_THEME_KEY] != false }
+
+    suspend fun setDarkMode(enabled: Boolean) =
+        dataStore.edit { it[DARK_MODE_KEY] = enabled }
+
+    suspend fun setFollowSystemTheme(enabled: Boolean) =
+        dataStore.edit { it[FOLLOW_SYSTEM_THEME_KEY] = enabled }
+
+    val isPowerChartExpanded: Flow<Boolean> =
+        dataStore.data.map { it[POWER_CHART_EXPANDED_KEY] ?: true }
+
+    suspend fun setPowerChartExpanded(expanded: Boolean) {
+        dataStore.edit { it[POWER_CHART_EXPANDED_KEY] = expanded }
+    }
+
+    val dailyHistoryEnabled: Flow<Boolean> =
+        dataStore.data.map { it[DAILY_HISTORY_ENABLED] ?: false }
+
+    suspend fun setDailyHistoryEnabled(context: Context, enabled: Boolean) {
+        dataStore.edit { it[DAILY_HISTORY_ENABLED] = enabled }
+
+        val workManager = WorkManager.getInstance(context)
+        if (enabled) {
+            val dailyWorkRequest = PeriodicWorkRequestBuilder<DailyHistoryWorker>(24, TimeUnit.HOURS)
+                .build()
+
+            workManager.enqueueUniquePeriodicWork(
+                "DailyHistoryLog",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                dailyWorkRequest
+            )
+        } else {
+            workManager.cancelUniqueWork("DailyHistoryLog")
+        }
+    }
+
+    val floatingWindowAlpha: Flow<Float> =
+        dataStore.data.map { it[FLOATING_WINDOW_ALPHA] ?: 0.75f }
+
+    suspend fun setFloatingWindowAlpha(alpha: Float) {
+        dataStore.edit { it[FLOATING_WINDOW_ALPHA] = alpha }
+    }
+
+    val floatingWindowSize: Flow<Float> =
+        dataStore.data.map { it[FLOATING_WINDOW_SIZE] ?: 1.0f }
+
+    suspend fun setFloatingWindowSize(size: Float) {
+        dataStore.edit { it[FLOATING_WINDOW_SIZE] = size }
+    }
+
+    val floatingWindowTouchable: Flow<Boolean> =
+        dataStore.data.map { it[FLOATING_WINDOW_TOUCHABLE] ?: true }
+
+    suspend fun setFloatingWindowTouchable(touchable: Boolean) {
+        dataStore.edit { it[FLOATING_WINDOW_TOUCHABLE] = touchable }
+    }
+
+    val floatingWindowTextColor: Flow<String> =
+        dataStore.data.map { it[FLOATING_WINDOW_TEXT_COLOR] ?: "auto" }
+
+    suspend fun setFloatingWindowTextColor(colorKey: String) {
+        dataStore.edit { it[FLOATING_WINDOW_TEXT_COLOR] = colorKey }
+    }
+
+    val floatingWindowBackgroundColor: Flow<String> =
+        dataStore.data.map { it[FLOATING_WINDOW_BACKGROUND_COLOR] ?: "auto" }
+
+    suspend fun setFloatingWindowBackgroundColor(colorKey: String) {
+        dataStore.edit { it[FLOATING_WINDOW_BACKGROUND_COLOR] = colorKey }
+    }
+
+    val floatingWindowTextShadowEnabled: Flow<Boolean> =
+        dataStore.data.map { it[FLOATING_WINDOW_TEXT_SHADOW] ?: false }
+
+    suspend fun setFloatingWindowTextShadowEnabled(enabled: Boolean) {
+        dataStore.edit { it[FLOATING_WINDOW_TEXT_SHADOW] = enabled }
+    }
+
+    val floatingWindowFontWeight: Flow<Int> =
+        dataStore.data.map { it[FLOATING_WINDOW_FONT_WEIGHT] ?: 400 }
+
+    suspend fun setFloatingWindowFontWeight(fontWeight: Int) {
+        dataStore.edit { it[FLOATING_WINDOW_FONT_WEIGHT] = fontWeight }
+    }
+
+    val floatingWindowTextStrokeEnabled: Flow<Boolean> =
+        dataStore.data.map { it[FLOATING_WINDOW_TEXT_STROKE_ENABLED] ?: false }
+
+    suspend fun setFloatingWindowTextStrokeEnabled(enabled: Boolean) {
+        dataStore.edit { it[FLOATING_WINDOW_TEXT_STROKE_ENABLED] = enabled }
+    }
+
+    val isCelsiusFlow: Flow<Boolean> =
+        dataStore.data.map { it[IS_CELSIUS] ?: true }
+
+    suspend fun setIsCelsius(isCelsius: Boolean) {
+        dataStore.edit { it[IS_CELSIUS] = isCelsius }
+    }
+}

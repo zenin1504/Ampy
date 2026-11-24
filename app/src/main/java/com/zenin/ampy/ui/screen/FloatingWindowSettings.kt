@@ -1,0 +1,311 @@
+package com.zenin.ampy.ui.screen
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Slider
+import com.zenin.ampy.ui.components.CustomSwitch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.zenin.ampy.R
+import com.zenin.ampy.ui.components.AppScaffold
+import com.zenin.ampy.ui.components.BackIcon
+import com.zenin.ampy.ui.components.CardGroup
+import com.zenin.ampy.ui.components.CardGroupTitle
+import com.zenin.ampy.vm.FloatingWindowSettingsViewModel
+
+@Composable
+fun FloatingWindowSettings(
+    currentTitle: String,
+    navController: NavController,
+    floatingWindowSettingsViewModel: FloatingWindowSettingsViewModel
+) {
+    AppScaffold(
+        currentTitle,
+        navigationIcon = { BackIcon(navController) }
+    ) {
+        FloatingWindowSettingsContent(floatingWindowSettingsViewModel)
+    }
+}
+
+@Composable
+fun FloatingWindowSettingsContent(floatingWindowSettingsViewModel: FloatingWindowSettingsViewModel) {
+    val alpha by floatingWindowSettingsViewModel.floatingWindowAlpha.collectAsState()
+    val size by floatingWindowSettingsViewModel.floatingWindowSize.collectAsState()
+    val touchable by floatingWindowSettingsViewModel.floatingWindowTouchable.collectAsState()
+    val textColorKey by floatingWindowSettingsViewModel.floatingWindowTextColor.collectAsState()
+    val backgroundColorKey by floatingWindowSettingsViewModel.floatingWindowBackgroundColor.collectAsState()
+    val fontWeight by floatingWindowSettingsViewModel.floatingWindowFontWeight.collectAsState()
+
+    val textColorOptions = mapOf(
+        "auto" to stringResource(R.string.color_auto),
+        "primary" to stringResource(R.string.color_primary),
+        "secondary" to stringResource(R.string.color_secondary),
+        "error" to stringResource(R.string.color_error)
+    )
+
+    val backgroundColorOptions = mapOf(
+        "auto" to stringResource(R.string.color_auto),
+        "primaryContainer" to stringResource(R.string.color_primary_container),
+        "secondaryContainer" to stringResource(R.string.color_secondary_container),
+        "errorContainer" to stringResource(R.string.color_error_container)
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 8.dp)
+    ) {
+        CardGroup(
+            title = { CardGroupTitle(text = stringResource(R.string.general)) },
+            content = listOf(
+                {
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(
+                            R.string.opacity,
+                            String.format("%.2f", alpha)
+                        )) },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.opacity_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                                contentDescription = null,
+                            )
+                        },
+                        supportingContent = {
+                            Slider(
+                                value = alpha,
+                                onValueChange = { newAlpha ->
+                                    floatingWindowSettingsViewModel.setFloatingWindowAlpha(newAlpha)
+                                },
+                                valueRange = 0.0f..1.0f
+                            )
+                        }
+                    )
+                },
+                {
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(
+                            R.string.size,
+                            String.format("%.2f", size)
+                        )) },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.resize_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                                contentDescription = null,
+                            )
+                        },
+                        supportingContent = {
+                            Slider(
+                                value = size,
+                                onValueChange = { newSize ->
+                                    floatingWindowSettingsViewModel.setFloatingWindowSize(newSize)
+                                },
+                                valueRange = 0.5f..2.0f
+                            )
+                        }
+                    )
+                },
+                {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.format_color_fill_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                            contentDescription = null,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Column {
+                            Text(
+                                text = stringResource(R.string.background_color),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(vertical = 12.dp)
+                            )
+                            LazyRow(
+                                modifier = Modifier
+                                    .padding(bottom = 16.dp)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(end = 16.dp)
+                            ) {
+                                items(backgroundColorOptions.toList()) { (key, name) ->
+                                    val isSelected = key == backgroundColorKey
+                                    OutlinedCard(
+                                        onClick = { floatingWindowSettingsViewModel.setFloatingWindowBackgroundColor(key) },
+                                        border = CardDefaults.outlinedCardBorder(),
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+                                            contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+                                        ),
+                                    ) {
+                                        Text(
+                                            text = name,
+                                            modifier = Modifier.padding(16.dp),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        CardGroup(
+            title = { CardGroupTitle(text = stringResource(R.string.text)) },
+            content = listOf(
+                {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.format_color_text_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                            contentDescription = null,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Column {
+                            Text(
+                                text = stringResource(R.string.text_color),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(vertical = 12.dp)
+                            )
+                            LazyRow(
+                                modifier = Modifier
+                                    .padding(bottom = 16.dp)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(end = 16.dp)
+                            ) {
+                                items(textColorOptions.toList()) { (key, name) ->
+                                    val isSelected = key == textColorKey
+                                    OutlinedCard(
+                                        onClick = { floatingWindowSettingsViewModel.setFloatingWindowTextColor(key) },
+                                        border = CardDefaults.outlinedCardBorder(),
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+                                            contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+                                        ),
+                                    ) {
+                                        Text(
+                                            text = name,
+                                            modifier = Modifier.padding(16.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(R.string.font_weight, fontWeight)) },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.format_bold_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                                contentDescription = null,
+                            )
+                        },
+                        supportingContent = {
+                            Slider(
+                                value = fontWeight.toFloat(),
+                                onValueChange = { newFontWeight ->
+                                    floatingWindowSettingsViewModel.setFloatingWindowFontWeight(newFontWeight.toInt())
+                                },
+                                valueRange = 100f..900f,
+                                steps = 7
+                            )
+                        }
+                    )
+                },
+                {
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(R.string.text_stroke)) },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.border_all_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                                contentDescription = null,
+                            )
+                        },
+                        trailingContent = {
+                            val textStrokeEnabled by floatingWindowSettingsViewModel.floatingWindowTextStrokeEnabled.collectAsState()
+                            CustomSwitch(
+                                checked = textStrokeEnabled,
+                                onCheckedChange = { floatingWindowSettingsViewModel.setFloatingWindowTextStrokeEnabled(it) }
+                            )
+                        }
+                    )
+                },
+                {
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(R.string.text_shadow)) },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.shadow_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                                contentDescription = null,
+                            )
+                        },
+                        trailingContent = {
+                            val textShadowEnabled by floatingWindowSettingsViewModel.floatingWindowTextShadowEnabled.collectAsState()
+                            CustomSwitch(
+                                checked = textShadowEnabled,
+                                onCheckedChange = { floatingWindowSettingsViewModel.setFloatingWindowTextShadowEnabled(it) }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        CardGroup(
+            title = { CardGroupTitle(text = stringResource(R.string.interaction))},
+            content = listOf(
+                {
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(R.string.enable_touch)) },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.touch_app_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                                contentDescription = null,
+                            )
+                        },
+                        trailingContent = {
+                            CustomSwitch(
+                                checked = touchable,
+                                onCheckedChange = { newTouchable ->
+                                    floatingWindowSettingsViewModel.setFloatingWindowTouchable(newTouchable)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { floatingWindowSettingsViewModel.resetFloatingWindowSettings() }) {
+            Text(text = stringResource(R.string.reset))
+        }
+    }
+}

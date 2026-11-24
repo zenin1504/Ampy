@@ -1,31 +1,23 @@
-# PlusPlusBattery - OPlus 裝置電池資訊檢視器
+# Ampy - 裝置電池資訊檢視器（PlusPlusBattery 分支）
 
 [简体中文](./README.zh.md) | 繁體中文 | [English](./README.md)
 
 ## 簡介
 
-`PlusPlusBattery` 是一款輕量級的電池資訊與健康度評估工具，專為 OnePlus/Oppo/Realme 裝置（並支援通用裝置）量身打造。它能即時監控電池狀態，並在特定條件下評估矽碳負極電池的完全充電容量（FCC）、未經補償的原始 FCC 及健康狀態（SOH）。
+`Ampy` 是一款主要針對小米 / Redmi / POCO 裝置的 Android 7.0+（API 24+）輕量電池資訊工具。Logcat 解析優先适配小米，OnePlus/OPlus、摩托羅拉及通用格式作為後備。它提供即時電池狀態監測，並在裝置概覽中顯示電池設計容量。
 
 ## 功能
 
-- **即時電池資訊**：無需 root 權限即可顯示目前電量、電壓、電流、充放電功率圖表及健康狀態。
-- **電池健康度評估**：僅在電量達到 100% 且電池電流介於 0 至 25 mA 之間時，計算並記錄完全充電容量。此數值用於評估電池健康度與壽命，並非精確值，僅為估算。
+- **即時電池資訊**：緊湊網格顯示電量、溫度、狀態、健康度、循環次數與電壓；電流充電時為正、放電時為負；功率圖表預設展開並保持全寬以便閱讀。
+- **重新設計的設定頁**：設定項目依卡片分組，搭配圖示與清楚標籤，更新間隔對話框也更簡潔。
+- **常駐通知**：特殊用途前景服務搭配精確鬧鐘看門狗，可在待機或廠商殺掉處理程序後還原鎖屏通知；建議依提示允許精確鬧鐘。
+- **裝置與電池概覽**：顯示裝置型號、Android 版本、電池類型，以及來自裝置電源設定的電池設計容量（可用時，後備讀取 logcat）。
+- **原生最佳化**：三個支援 16 KB 頁面對齊的 C++ 程式庫分別負責批次解析 logcat、在保留峰值的前提下對長時間功率圖表降取樣，以及以每樣本 O(1) 成本維護滾動功率統計。
 - **循環次數歷史記錄**：自動或手動記錄每日的電池循環次數，並使用 Room 資料庫儲存於本機。使用者可在歷史頁面檢視，並匯出為 CSV 檔案。
-- **即時電池監控**：在可自訂的懸浮視窗或通知區域中顯示電池指標。資訊項目可自訂。
-- **Root 模式**：需要 root 權限以讀取額外資訊。
-- **目前剩餘容量 (Root 模式)**：讀取自 `/sys/class/oplus_chg/battery/battery_rm`。此數值會隨電量變化。
-- **完全充電容量 (battery_fcc) (Root 模式)**：讀取自 `/sys/class/oplus_chg/battery/battery_fcc`。此數值會根據充放電行為波動。
-- **原始完全充電容量 (Root 模式)**：反向計算得出的未補償 FCC。矽碳負極電池通常會根據低電壓閾值進行演算法補償。
-- **電池健康度 (battery_soh) (Root 模式)**：讀取自 `/sys/class/oplus_chg/battery/battery_soh`。此數值會隨使用情況波動。
-- **原始電池健康度 (Root 模式)**：反向計算得出的未補償 SOH。矽碳負極電池通常會根據低電壓閾值進行補償。
-- **電池低電壓閾值 (vbat_uv) (Root 模式)**：讀取自 `/sys/class/oplus_chg/battery/vbat_uv`。當電壓低於此閾值時，裝置將會關機。
-- **電池序號 (battery_sn) (Root 模式)**：讀取自 `/sys/class/oplus_chg/battery/battery_sn`。
-- **電池製造日期 (battery_manu_date) (Root 模式)**：讀取自 `/sys/class/oplus_chg/battery/battery_manu_date`。
-- **Qmax (batt_qmax) (Root 模式)**：Qmax 指的是電池的化學容量。此容量值與負載無關，代表電池在極低負載電流下可釋放的容量，通常以 mAh 表示。在系統中，此數值會因某些條件觸發而改變。
-- **自訂項目 (Root 模式)**：為通用裝置提供可自訂的項目，預設會顯示來自通用 Linux power_supply 檔案的充電循環次數和 FCC。您也可以隨意新增任何其他可讀取的路徑。使用者還可以匯出/匯入自訂設定檔。
+- **即時電池監控**：在可自訂的懸浮視窗或通知區域中顯示電池指標。可選擇要顯示的項目。
 
 ## 實驗性功能
-- **從 Logcat 獲取電池資料 (Root 模式)**：對於某些裝置，本應用程式可以從 logcat 中提取電池相關資料。目前支援部分 OPlus、Moto 和小米裝置（支援程度因型號和系統而異）。
+- **從 Logcat 獲取電池資料**：優先解析小米日誌，OPlus/OnePlus、摩托羅拉及通用格式作為後備。Android 會限制應用程式可讀取的日誌，實際可用性因裝置與系統而異。
 
 ## 螢幕截圖
 
@@ -43,16 +35,14 @@
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/en/packages/com.dijia1124.plusplusbattery/)
 
-或從 [Github Release](https://github.com/dijia1124/PlusPlusBattery/releases) 下載 APK
+或從 [Github Release](https://github.com/zenin1504/Ampy/releases) 下載 APK
 
 ## 安裝
 
-1. 確保您的 OnePlus 裝置正在執行較新版本的 ColorOS 或 OxygenOS（例如 ColorOS 16），或較新的 AOSP-based ROM。
+1. 小米 / Redmi / POCO 裝置建議使用較新的 HyperOS 或 MIUI；OnePlus/OPlus 裝置使用較新的 ColorOS 或 OxygenOS 也作為後備支援。
 2. 前往 Release 頁面下載並安裝 APK。
 3. 啟動應用程式。
-4. （可選）授予 root 權限。
-5. （可選）若要使用電池監控通知：需在系統設定中關閉 PlusPlusBattery 的電池最佳化。此外，對於 ColorOS 使用者，還需要在系統設定中為 PlusPlusBattery 啟用「自動啟動」權限，以確保監控服務能根據螢幕開啟/關閉狀態正常地恢復/暫停。
-6. （可選）對於非 Oppo/OnePlus/Realme 裝置，您可能會想停用「顯示 OPlus 專屬項目」選項以隱藏 root 模式下那些無用的資料，並編輯自訂項目以符合您的需求。
+4. （可選）為了讓通知持續更新，請將 Ampy 的電池最佳化設為「無限制」，並在 HyperOS/MIUI 上啟用「自動啟動」權限；OnePlus/OPlus 後備裝置請在 ColorOS 上啟用「自動啟動」權限。請勿在系統設定中強制停止 Ampy，Android 不允許應用程式在被強制停止後自行啟動。
 
 ## 鳴謝
 

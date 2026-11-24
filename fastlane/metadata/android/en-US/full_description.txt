@@ -1,4 +1,4 @@
-PlusPlus Battery gives you everything you ever wanted to know about your phone’s
+Ampy (a fork of PlusPlusBattery) gives you everything you ever wanted to know about your phone’s
 battery — from simple level and power readings to deep-dive metrics.
 It is designed and tested on modern OnePlus/Oppo/Realme devices,
 but also works on most recent AOSP-based ROMs.
@@ -42,8 +42,9 @@ but also works on most recent AOSP-based ROMs.
 2. Install the APK (or via F-Droid once this package is published).
 3. Launch and grant the requested permissions.
 4. (Optional) Grant root to unlock advanced metrics.
-5. (Optional) To make the monitor service work as intended, disable battery optimisation for
-   PlusPlusBattery and, on ColorOS 15, enable “Auto-launch”.
+5. (Optional) To keep the monitor notification refreshing, disable battery optimisation
+   (“No restrictions”) for Ampy and, on ColorOS 15, enable “Auto-launch”.
+   Do not force-stop Ampy from system settings: Android forbids self-restart after a force stop.
 6. (Optional) For non-Oppo/OnePlus/Realme devices, you may want to disable the option 'Show OPlus exclusive entries' to hide those useless data under root mode.
 
 ───────────────────

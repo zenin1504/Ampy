@@ -1,0 +1,49 @@
+package com.zenin.ampy.data.repository
+
+import android.app.Application
+import com.zenin.ampy.data.local.HistoryInfoDao
+import com.zenin.ampy.data.local.HistoryInfoDatabase
+import com.zenin.ampy.data.model.HistoryInfo
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class HistoryInfoRepository @Inject constructor (
+    application: Application
+) {
+    private var historyInfoDao: HistoryInfoDao =
+        HistoryInfoDatabase.Companion.getDatabase(application).historyInfoDao()
+    val allHistoryInfos: Flow<List<HistoryInfo>> = historyInfoDao.getAllHistoryInfos()
+    suspend fun insert(historyInfo: HistoryInfo) {
+        historyInfoDao.insertHistoryInfo(historyInfo)
+    }
+    suspend fun delete(historyInfo: HistoryInfo) {
+        historyInfoDao.deleteHistoryInfo(historyInfo)
+    }
+    suspend fun update(historyInfo: HistoryInfo) {
+        historyInfoDao.updateHistoryInfo(historyInfo)
+    }
+    suspend fun getHistoryInfoByDate(dateString: String): HistoryInfo? {
+        return historyInfoDao.getHistoryInfoByDate(dateString)
+    }
+
+    suspend fun insertOrUpdate(info: HistoryInfo) {
+        val old = getHistoryInfoByDate(info.dateString)
+        if (old == null) {
+            insert(info)
+        } else {
+            val oldCnt = old.cycleCount.toIntOrNull() ?: -1
+            val newCnt = info.cycleCount.toIntOrNull() ?: -1
+            if (newCnt > oldCnt) {
+                update(info.copy(uid = old.uid))
+            }
+        }
+    }
+
+    fun getFirstHistoryInfo(): Flow<HistoryInfo?> {
+        return historyInfoDao.getFirstHistoryInfo()
+    }
+
+    fun getLastHistoryInfo(): Flow<HistoryInfo?> {
+        return historyInfoDao.getLastHistoryInfo()
+    }
+}

@@ -31,9 +31,6 @@
 }
 -keep class * extends androidx.room.Entity { *; }
 
--keep class com.topjohnwu.superuser.** { *; }
--dontwarn com.topjohnwu.superuser.**
-
 -keep class * implements androidx.datastore.core.DataMigration { *; }
 
 -keep class * extends android.content.BroadcastReceiver {
@@ -42,4 +39,12 @@
 
 -keepclassmembers class * extends androidx.lifecycle.ViewModel {
     <init>(...);
+}
+
+# JNI entry points must keep their class and method names for native lookup.
+-keep class com.zenin.ampy.nativelib.AmpyLogNative { *; }
+-keep class com.zenin.ampy.nativelib.AmpyChartNative { *; }
+-keep class com.zenin.ampy.nativelib.AmpyStatsNative { *; }
+-keepclasseswithmembernames class * {
+    native <methods>;
 }

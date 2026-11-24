@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">加加电池</string>
+    <string name="app_name">Ampy</string>
     <string name="about">关于</string>
     <string name="instructions_content" formatted="false">
         项目地址：https://github.com/dijia1124/PlusPlusBattery \n
+        主要适配小米 / Redmi / POCO 设备；一加 / 欧加设备作为后备支持。\n
         作者：@dijia1124 aka goodnic \n
         鸣谢: @shminer aka bybycode \n
     本应用显示以下电池信息：\n
@@ -12,19 +13,11 @@
     - 电池健康：电池当前的健康状况（良好、过热、损坏、超压、未知）。\n
     - 电压：当前电池电压（毫伏）。\n
     - 循环计数：电池充放电的次数。\n
-    - 电流：当前电池的瞬时电流（毫安）。\n
-    - 完全充满时的容量：估算的电池完全充满时的容量（毫安时）。\n
-    完全充满时的容量会在电池充满时显示：\n
-    仅当电量为 100% 且电流在 0-25 mA 之间时，才视为电池充满。\n
-    - Root模式（欧加设备专属条目 + 通用自定义条目）：\n
-    - 完全充满时的容量（battery_fcc）：通过读取/sys/class/oplus_chg/battery/battery_fcc获取的值。\n
-    - 电池健康（battery_soh）：通过读取/sys/class/oplus_chg/battery/battery_soh获取的值。\n
-    - 截止电压（vbat_uv）：通过读取/sys/class/oplus_chg/battery/vbat_uv获取的值。低于此电压会关机。\n
-    - 电池生产日期（battery_manu_date）：通过读取/sys/class/oplus_chg/battery/battery_manu_date获取的值。\n
-    - 电池最大化学容量（batt_qmax）：电池的最大化学容量。该容量值与负载无关。它是电池在非常小的负载电流下可以释放的容量，通常以毫安时表示。\n
-    - 自定义显示条目：为通用设备支持的自定义条目, 预设配置文件可供选择，读取linux power_supply目录下的文件可以显示电池容量和循环计数。当然你也可以添加其他任意路径来读取你想要的数据。用户也可以自行导出配置进行分享或者导入外部配置。\n
+    - 电流：当前电池的瞬时电流（毫安），充电时为正，其他情况下为负。\n
+    - 电池设计容量：电池的标称容量（毫安时），可用时在「设备与电池」卡片中显示。\n
+     - Logcat 电池数据（实验功能）：优先解析小米日志，欧加、摩托罗拉及通用格式作为后备。实际可用数据取决于系统允许应用读取的日志。\n
     </string>
-    <string name="plus_plus_battery">加加电池</string>
+    <string name="plus_plus_battery">Ampy</string>
     <string name="history">历史信息</string>
     <string name="cycle_counts">"电池循环次数: "</string>
     <string name="battery_level">电量</string>
@@ -34,10 +27,6 @@
     <string name="battery_health">电池健康</string>
     <string name="battery_cycle_count">循环计数</string>
     <string name="battery_current">电流</string>
-    <string name="full_charge_capacity">完全充满时的容量</string>
-    <string name="estimated_fcc_title">电池容量估算</string>
-    <string name="estimated_fcc_info">此值在电量完全充满（100%）且电流小于25 mA 时进行估算。此时的charge counter的值会被记录并且显示于此。 \n\n注意上方电流倍率和单双电芯选项需要选择正确。\n\n同时，这个功能不需要app常驻后台，理论上它只需要你充满电的那一刻处于app主页。\n\n另外，您也可以在电池监控界面开启悬浮窗或通知功能。当电池充满后，只需点亮屏幕，App 便会记录估算的满电容量。</string>
-    <string name="estimating_full_charge_capacity">正在测量完全充满时的容量…</string>
     <string name="capacity_unavailable">无法读取容量</string>
     <string name="charging">充电中</string>
     <string name="discharging">放电中</string>
@@ -61,23 +50,6 @@
     <string name="calibrate_via_multiplier">修改倍率以校准电流</string>
     <string name="reset">恢复默认</string>
     <string name="close">关闭</string>
-    <string name="use_basic_mode">使用基础模式</string>
-    <string name="enable_root_mode">启用 Root 模式</string>
-    <string name="disable_root_mode">禁用 Root 模式</string>
-    <string name="full_charge_capacity_battery_fcc">完全充满时的容量 (battery_fcc)</string>
-    <string name="battery_health_battery_soh">电池健康 (battery_soh)</string>
-    <string name="battery_manufacture_date_battery_manu_date">电池生产日期 (battery_manu_date)</string>
-    <string name="root_access_denied">无法获取 Root 权限</string>
-    <string name="battery_under_voltage_threshold_vbat_uv">截止电压 (vbat_uv)</string>
-    <string name="raw_battery_health_before_compensation">原始电池健康</string>
-    <string name="raw_full_charge_capacity_before_compensation">原始完全充满时的容量</string>
-    <string name="remaining_charge_counter">"当前剩余电量 (battery_rm)"</string>
-    <string name="battery_serial_number_battery_sn">电池序列号 (battery_sn)</string>
-    <string name="fcc_soh_offset_table">FCC/SOH偏移量表</string>
-    <string name="vbatuv_mv_fccoffset_mah_sohoffset">\n截止电压, fcc偏移量, soh偏移量\n</string>
-    <string name="offset_table_not_found">\n未找到偏移量表\n</string>
-    <string name="unknown_due_to_fcc_equals_design_capacity" formatted="false">\n当 battery_fcc 恰好等于设计容量，或者 battery_soh 恰好等于 100% 时，此值会显示为“未知”。因为实际补偿后的值可能会超过最大显示值，导致原始值偏小。\n</string>
-    <string name="raw_fcc_soh_calc_intro"><![CDATA[加加电池中的原始 fcc&soh 依据这张表计算反推\n]]></string>
     <string name="settings">设置</string>
     <string name="text_color">文本颜色</string>
     <string name="color_auto">自动</string>
@@ -88,13 +60,9 @@
     <string name="color_primary_container">主容器色</string>
     <string name="color_secondary_container">辅助容器色</string>
     <string name="color_error_container">警示容器色</string>
-    <string name="show_fab_on_dashboard">在首页显示悬浮按钮</string>
     <string name="version">版本: %1$s</string>
-    <string name="battery_qmax">电池最大化学容量 (batt_qmax)</string>
     <string name="follow_system_theme">跟随系统主题</string>
     <string name="enable_dark_mode">开启暗黑模式</string>
-    <string name="battery_type_battery_type">电池类型 (battery_type)</string>
-    <string name="design_capacity_design_capacity">电池设计容量 (design_capacity)</string>
     <string name="notification_permission_denied">无法获取通知权限</string>
     <string name="show_in_floating_window">在悬浮窗显示</string>
     <string name="overlay_permission_denied">无法获取悬浮窗权限</string>
@@ -108,42 +76,34 @@
     <string name="please_select_the_entries_you_want_to_show_in_the_battery_monitor">请选择你想要电池监控显示的条目:</string>
     <string name="monitor">监控</string>
     <string name="stop">停止</string>
-    <string name="disable_battery_optimization">加入电池优化白名单以便电池监控服务正常运行。在 ColorOS 上也许需要在系统设置中为加加电池打开自启动权限以便熄屏暂停电池监控和亮屏继续电池监控正常运行。</string>
+    <string name="disable_battery_optimization">为保证通知常驻刷新，请将 Ampy 的电池优化设为「无限制」，并在系统设置中开启自启动权限。退出或杀掉应用后通知仍会继续刷新；但 Android 不允许应用在用户从系统设置中强制停止后自行启动，请勿强制停止 Ampy。</string>
     <string name="check_for_updates">检查更新</string>
     <string name="set_refresh_interval_ms">设置刷新间隔 (毫秒)</string>
     <string name="current_value">当前数值: %1$s</string>
-    <string name="oem_refresh_interval_limitation_description">仅对Root模式生效。非Root模式受OEM限制无法短于系统设定值。</string>
+    <string name="oem_refresh_interval_limitation_description">系统可能限制应用使用比系统设定值更短的间隔，即使此处选择了更低的值。</string>
     <string name="refresh_interval_battery_drain_description">刷新间隔设置过短可能导致多余耗电。</string>
     <string name="get_from_logcat">实验功能：logcat电池数据</string>
     <string name="get_from_logcat_title">logcat电池数据</string>
-    <string name="waiting_for_battery_data_from_logcat">请把设备插上充电器，并保持电量不要到达100%… \n如果数据显示错误或毫无显示，那你的设备的logcat可能还没有被加加电池支持，或者logcat里根本没有电池信息。</string>
+    <string name="waiting_for_battery_data_from_logcat">请把设备插上充电器，并保持电量不要到达100%… \n如果数据显示错误或毫无显示，那你的设备的logcat可能还没有被Ampy 支持，或者logcat里根本没有电池信息。</string>
     <string name="manufacturer">制造商: %1$s</string>
+    <string name="battery_readings">实时电池数据</string>
+    <string name="android_short">Android</string>
+    <string name="battery_short">电池</string>
+    <string name="capacity_short">电池设计容量</string>
+    <string name="capacity_from_logcat_value">%1$s mAh</string>
+    <string name="device_and_battery">设备与电池</string>
+    <string name="android_version">Android 版本：%1$s（API %2$d）</string>
+    <string name="battery_type">电池类型：%1$s</string>
+    <string name="power_chart_stats">平均 %1$.1f W · 峰值 %2$.1f W · %3$d 个样本</string>
+    <string name="view_logcat_details">查看 logcat 详情</string>
     <string name="model">型号: %1$s</string>
-    <string name="custom_battery_info">自定义条目</string>
-    <string name="enable_oplus_fields">显示欧加专属条目</string>
-    <string name="design_capacity">设计容量</string>
-    <string name="manage_custom_entries">管理自定义条目</string>
-    <string name="choose_from_presets">从预设中选择</string>
-    <string name="export_profile">导出</string>
-    <string name="import_profile">导入</string>
-    <string name="imported">已导入</string>
-    <string name="import_failed">导入失败: %1$s</string>
     <string name="saved_to_downloads">已保存到下载目录</string>
-    <string name="export_failed">导出失败</string>
-    <string name="no_custom_entries">尚无自定义条目</string>
     <string name="add">添加</string>
-    <string name="preset_imported">预设 %1$s 已导入</string>
-    <string name="edit_custom_entry">编辑自定义条目</string>
-    <string name="add_custom_entry">添加自定义条目</string>
-    <string name="path_sys">路径 (/sys/…)</string>
     <string name="title">标题</string>
-    <string name="unit_optional">单位（可选）</string>
-    <string name="scale">校准倍率</string>
-    <string name="existed">已存在</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
     <string name="battery_cycle_count_info">该功能依靠系统的 BatteryManager API。如果该数值一直显示“-1”或“5”，则说明你的系统尚不支持该 API。可能是因为你的安卓版本低于14，有时亦可发生在安卓15及以上版本。</string>
-    <string name="wrong_battery_voltage_info">如果这个数值小于 10 mV, 你的设备也许正以 V（伏特）回报电压，而不是 mV（毫伏）。这也会导致错误的功率显示。如果有 Root 权限，欧加设备也许能获得正确电压。</string>
+    <string name="wrong_battery_voltage_info">如果这个数值小于 10 mV, 你的设备也许正以 V（伏特）回报电压，而不是 mV（毫伏）。这也会导致错误的功率显示。</string>
     <string name="automatic_daily_charge_cycle_log">每日自动记录电池循环次数</string>
     <string name="workmanager_for_charge_cycle">默认情况下，打开 App 时会尝试记录循环次数。你可能需要在首页和设置页面来回切换一次来触发记录。\n\n或者，你可以在设置里启用“每日自动记录电池循环次数”从而实现无需打开 App 并通过WorkManager自动触发记录。</string>
     <string name="opacity">不透明度: %1$s</string>
@@ -160,9 +120,12 @@
     <string name="floating_window">悬浮窗</string>
     <string name="tips">提示</string>
     <string name="ui">用户界面</string>
-    <string name="root">Root</string>
     <string name="other">其他</string>
     <string name="text">文本</string>
     <string name="interaction">交互</string>
     <string name="battery_current_info">默认情况下，本应用将系统上报的数值视为 mA。但部分设备可能使用 uA 或其他单位。若读数不准确，请在此进行调整。</string>
+    <string name="current_sign_info">充电时为正，其他情况下为负。</string>
+    <string name="keep_monitor_alive">保持通知常驻</string>
+    <string name="exact_alarm_info">请允许 Ampy 使用精确闹钟，以便在系统于待机时杀掉进程后恢复通知。</string>
+    <string name="open_exact_alarm_settings">精确闹钟设置</string>
 </resources>

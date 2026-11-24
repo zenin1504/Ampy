@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PlusPlusBattery"
+rootProject.name = "Ampy"
 include(":app")
