@@ -1,6 +1,6 @@
 # PlusPlusBattery - Battery Info Viewer for OPlus Devices
 
-> **Note:** This repository is **Ampy**, a fork of [PlusPlusBattery](https://github.com/dijia1124/PlusPlusBattery). Ampy is optimized for Xiaomi / Redmi / POCO devices, but it also works on other Android devices through OPlus, Moto, and generic logcat/fallback parsers. The documentation below is preserved from the original upstream project.
+> **Note:** This repository is **Ampy**, a fork of [PlusPlusBattery](https://github.com/dijia1124/PlusPlusBattery). Ampy is optimized for Xiaomi / Redmi / POCO devices, but it also works on other Android devices through OPlus, Moto, and generic logcat/fallback parsers. Its optional native core is written in Rust (`versionName` ends in `-R`). The documentation below is preserved from the original upstream project.
 
 [简体中文](./README.zh.md) | [繁體中文](./README.zh-Hant.md) | English
 

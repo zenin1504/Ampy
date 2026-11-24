@@ -28,18 +28,26 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
 
-      - name: Install Android SDK platform 37, Build Tools 37, NDK and CMake
+      - name: Install Android SDK platform 37, Build Tools 37 and NDK
         run: |
           export ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | sort -V | tail -1)"
           yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
-          "$SDKMANAGER" "platforms;android-37.0" "build-tools;37.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
+          "$SDKMANAGER" "platforms;android-37.0" "build-tools;37.0.0" "ndk;27.2.12479018"
           # API 37 ships as android-37.0; AGP looks for android-37.
           rm -rf "$ANDROID_HOME/platforms/android-37"
           cp -a "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
           sed -i 's/^AndroidVersion.ApiLevel=37\.0$/AndroidVersion.ApiLevel=37/' "$ANDROID_HOME/platforms/android-37/source.properties"
           sed -i 's/platforms;android-37\.0/platforms;android-37/g' "$ANDROID_HOME/platforms/android-37/package.xml"
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk --locked
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6

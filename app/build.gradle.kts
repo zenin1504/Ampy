@@ -49,8 +49,8 @@ android {
         applicationId = "com.zenin.ampy"
         minSdk = 24
         targetSdk = 37
-        versionCode = 20
-        versionName = "1.9.0"
+        versionCode = 21
+        versionName = "1.9.0-R"
 
         // ARM 64-bit devices only. Drops 32-bit and x86/x86_64 libraries.
         ndk {
@@ -86,12 +86,47 @@ android {
         // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
-            version = "3.22.1"
-        }
-    }
+}
+
+val rustRoot = rootProject.file("rust")
+val jniLibsDir = file("src/main/jniLibs")
+val sdkRoot = System.getenv("ANDROID_HOME")
+    ?: System.getenv("ANDROID_SDK_ROOT")
+    ?: Properties().apply {
+        val file = rootProject.file("local.properties")
+        if (file.exists()) FileInputStream(file).use { load(it) }
+    }.getProperty("sdk.dir")
+    ?: error("Set ANDROID_HOME or sdk.dir in local.properties")
+val ndkHome = android.ndkPath?.takeIf { it.isNotBlank() }
+    ?: file("$sdkRoot/ndk/27.2.12479018").absolutePath
+
+val buildRustLibs by tasks.registering(Exec::class) {
+    workingDir = rustRoot
+    inputs.dir(rustRoot.resolve("crates"))
+    inputs.file(rustRoot.resolve("Cargo.toml"))
+    inputs.file(rustRoot.resolve("Cargo.lock"))
+    outputs.dir(jniLibsDir.resolve("arm64-v8a"))
+    environment("ANDROID_NDK_HOME", ndkHome)
+    commandLine(
+        System.getenv("CARGO") ?: "cargo",
+        "ndk",
+        "-t",
+        "arm64-v8a",
+        "-o",
+        jniLibsDir.absolutePath,
+        "build",
+        "--release",
+        "-p",
+        "ampy_chart",
+        "-p",
+        "ampy_logparse",
+        "-p",
+        "ampy_stats",
+    )
+}
+
+tasks.named("preBuild") {
+    dependsOn(buildRustLibs)
 }
 
 dependencies {

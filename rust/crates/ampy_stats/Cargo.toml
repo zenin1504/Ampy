@@ -1,0 +1,13 @@
+[package]
+name = "ampy_stats"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "ampy_stats"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+jni.workspace = true

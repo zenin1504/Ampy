@@ -1,0 +1,13 @@
+[package]
+name = "ampy_chart"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "ampy_chart"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+jni.workspace = true

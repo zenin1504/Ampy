@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/ampy_chart",
+    "crates/ampy_logparse",
+    "crates/ampy_stats",
+]
+
+[workspace.package]
+version = "1.9.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[workspace.dependencies]
+jni = "0.21.1"
